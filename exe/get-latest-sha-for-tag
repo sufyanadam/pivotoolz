@@ -1,10 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-TAG="$1"
+tag = ARGV[0]&.strip
 
-if [ -n "$TAG" ]; then
-  LATEST_SHA=$(git log --no-walk --tags=$TAG -1 --pretty=oneline | awk '{print $1}')
-  echo $LATEST_SHA
-else
-  echo "No tag given!!"
-fi
+if tag.nil?
+  puts "No tag given!!"
+  exit 1
+end
+
+latest_sha = `git log --no-walk --tags=#{tag} -1 --pretty=oneline | awk '{print $1}'`
+exit 1 if latest_sha.strip.empty?
+
+puts latest_sha
+exit 0
+
