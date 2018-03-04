@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'open-uri'
+require 'json'
+
+def get_story_info(story_id)
+  begin
+    open("https://www.pivotaltracker.com/services/v5/stories/#{story_id}", 'X-TrackerToken' => ENV['PIVOTAL_TRACKER_API_TOKEN']).read
+  rescue StandardError => e
+    JSON.generate({error: "could not get story info for story #{story_id}: #{e.message}\nstory info may be available at https://www.pivotaltracker.com/story/show/#{story_id}"})
+  end
+end
+
+stream = ARGV.any? ? ARGV : ARGF
+
+infos = stream.reduce([]) do |reduced, story_id|
+  next reduced unless story_id =~ /\d+/
+  reduced << get_story_info(story_id.strip)
+end
+
+puts infos.join("\n")

@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+environment_tag = ARGV[0] || 'acceptance'
+
+commit_message_bodies = `git log --pretty=%b $(git tag -l #{environment_tag}* | tail -n 2 | tr '\n' ' ' | sed -e 's/ /../')`.strip
+story_ids = commit_message_bodies.
+  scan(/\[Finishes\s*#(\d+)|,\s*#(\d+)\]|Fixes\s*#(\d+)|,\s*#(\d+)|#(\d+)\]/).
+  flatten.
+  uniq
+
+puts story_ids.join("\n")

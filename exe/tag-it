@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+tag=$1
+
+if [ "$tag" ]; then
+  TIMESTAMP=$(date -u +'%Y%m%d%H%M%S')
+  TAG=$tag/$TIMESTAMP
+
+  tag_exists=$(git log HEAD --no-walk -1 --pretty='%h%d' | grep "tag: $tag")
+
+  if [ -z "$tag_exists" ]; then
+    git tag $TAG
+    git push origin $TAG
+  else
+    echo "Already tagged $tag"
+  fi
+fi

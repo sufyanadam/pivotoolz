@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+require('json')
+require('ostruct')
+require('rest-client')
+
+stream = ARGV.any? ? ARGV : ARGF
+
+stream.each do |story_hash|
+  story = OpenStruct.new(JSON.parse(story_hash))
+  story_state = story.current_state
+  next unless story_state == 'finished'
+
+  story_url = "https://www.pivotaltracker.com/services/v5/stories/#{story.id}"
+  begin
+    response = RestClient::Request.execute(
+      method: :put,
+      url: story_url,
+      payload: {current_state: 'delivered'},
+      headers: {'X-TrackerToken' => ENV['PIVOTAL_TRACKER_API_TOKEN']}
+    )
+
+    puts response
+  rescue RestClient::Exceptions::OpenTimeout
+    # fail gracefully when Tracker is down
+  end
+end

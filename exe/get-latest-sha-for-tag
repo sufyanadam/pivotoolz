@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+TAG="$1"
+
+if [ -n "$TAG" ]; then
+  LATEST_SHA=$(git log --no-walk --tags=$TAG -1 --pretty=oneline | awk '{print $1}')
+  echo $LATEST_SHA
+else
+  echo "No tag given!!"
+fi

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e # Terminate on error
+
+TARGET_BRANCH=$1
+
+if [ -z $TARGET_BRANCH ]; then
+  echo You must provide a target branch name! Try 'development' or 'rc'
+  exit 1
+fi
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BRANCH_TO_MERGE=$CURRENT_BRANCH
+
+printf "\nRunning git pull origin $TARGET_BRANCH --rebase\n\n"
+git checkout $TARGET_BRANCH
+git pull origin $TARGET_BRANCH --rebase
+
+printf "Rebasing $TARGET_BRANCH into $BRANCH_TO_MERGE\n\n"
+git checkout $BRANCH_TO_MERGE
+git rebase $TARGET_BRANCH
+
+if [ "$BRANCH_TO_MERGE" == "development" ] || [ "$BRANCH_TO_MERGE" == "rc" ]; then
+  printf "No force push for $BRANCH_TO_MERGE\n\n"
+else
+  printf "Force pushing $BRANCH_TO_MERGE\n\n"
+  git push origin $BRANCH_TO_MERGE -f
+fi
+
+printf "Completing the merge of $BRANCH_TO_MERGE into $TARGET_BRANCH\n\n"
+git checkout $TARGET_BRANCH
+git merge $BRANCH_TO_MERGE --no-ff --no-edit
+
+printf "\n\nMerge complete, you must run git push origin $TARGET_BRANCH manually to complete the merge\n"

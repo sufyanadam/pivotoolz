@@ -7,11 +7,11 @@ Gem::Specification.new do |spec|
   spec.name          = "pivotoolz"
   spec.version       = Pivotoolz::VERSION
   spec.authors       = ["Sufyan Adam"]
-  spec.email         = ["pair+sufyanadam@gmail.com"]
+  spec.email         = ["sufyan@sealmail.net"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Tools to save you time when working with Pivotal Tracker stories}
+  spec.description   = %q{Auto-deliver your finished stories upon successful deployment, find out which stories went out in the last deployment}
+  spec.homepage      = "https://github.com/sufyanadam/pivotoolz"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

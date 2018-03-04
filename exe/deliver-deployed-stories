@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+environment_tag = ARGV[0] || 'acceptance'
+
+puts `bin/story-ids-deployed #{environment_tag} | bin/get-story-info-from-id | bin/deliver-story`

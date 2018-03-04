@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'ostruct'
+
+environment_tag = ARGV[0] || 'acceptance'
+
+deployed_story_infos = `bin/story-ids-deployed #{environment_tag} | bin/get-story-info-from-id`
+
+stories_deployed = deployed_story_infos.split("\n").compact.reduce([]) do |reduced, story_info|
+  story = OpenStruct.new(JSON.parse(story_info))
+
+  reduced << "#{story.error}"
+  reduced << "#{story.name}:\n#{story.url}"
+end
+
+puts stories_deployed
