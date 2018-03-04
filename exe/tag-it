@@ -1,17 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-tag=$1
+tag = ARGV[0]
 
-if [ "$tag" ]; then
-  TIMESTAMP=$(date -u +'%Y%m%d%H%M%S')
-  TAG=$tag/$TIMESTAMP
+if tag
+  timestamp = `date -u +'%Y%m%d%H%M%S'`
+  full_tag = "#{tag}/#{timestamp}"
+  tag_exists = `git log HEAD --no-walk -1 --pretty='%h%d'`.include? "tag: #{tag}"
 
-  tag_exists=$(git log HEAD --no-walk -1 --pretty='%h%d' | grep "tag: $tag")
+  if tag_exists
+    puts "Already tagged #{tag}!"
+    exit 0
+  end
 
-  if [ -z "$tag_exists" ]; then
-    git tag $TAG
-    git push origin $TAG
-  else
-    echo "Already tagged $tag"
-  fi
-fi
+  `git tag #{full_tag}`
+  `git push origin #{full_tag}`
+end
