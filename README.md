@@ -66,7 +66,6 @@ When in a branch you want to merge, just run
 with a clean git history and all commits in your branch will be bundled
 nicely under a top-level merge commit.
 
-
 ![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/merge-demo.gif)
 
 ### `tag-it`
@@ -77,6 +76,30 @@ Example:
 `tag-it production` - Will tag the current git HEAD with `production/TIMESTAMP`
 
 ![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/tag-it-demo.gif)
+
+### `stories-deployed`
+
+If you use `tag-it` to label your git SHAs for deployment, this will return a list
+of all stories deployed between the previous and last deployments using the tags to
+scan a commit range.
+
+Example:
+```
+stories-deployed production  # You may need to prepend bundle exec depending on your setup
+# Output:
+
+Update README:
+https://www.pivotaltracker.com/story/show/123
+
+Update dependencies
+https://www.pivotaltracker.com/story/show/456
+
+```
+
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/stories-deployed-demo.gif)
+
+Use with `post-slack-message` to post a message in a slack deployment channel
+with the list of stories that just got deployed.
 
 ### `deliver-deployed-stories`
 
@@ -111,33 +134,6 @@ Example:
 
 If `current_state` is not `finished`, the story will not be delivered.
 
-### `stories-deployed`
-
-Returns a list of all stories deployed to a given environment.
-
-Output is of the form:
-
-STORY_TITLE:
-LINK_TO_STORY
-
-STORY_TITLE:
-LINK_TO_STORY
-
-Example:
-```
-bundle exec stories-deployed production
-# Output:
-
-Update README:
-https://www.pivotaltracker.com/story/show/123
-
-Update dependencies
-https://www.pivotaltracker.com/story/show/456
-
-```
-
-Use with `post-slack-message` to post a message in a slack deployment channel
-with the list of stories that just got deployed.
 
 ### `post-slack-message`
 
