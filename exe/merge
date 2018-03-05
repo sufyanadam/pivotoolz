@@ -4,6 +4,7 @@ target_branch = ARGV[0]&.strip
 
 if target_branch.nil? || target_branch.empty?
   puts "You must provide a target branch name!"
+  puts "Usage: merge TARGET_BRANCH"
   exit 1
 end
 
