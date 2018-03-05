@@ -11,6 +11,7 @@ commit_message_bodies = `git log --pretty=%b $(git tag -l #{environment_tag}* | 
 story_ids = commit_message_bodies.
   scan(/\[Finishes\s*#(\d+)|,\s*#(\d+)\]|Fixes\s*#(\d+)|,\s*#(\d+)|#(\d+)\]/).
   flatten.
+  compact.
   uniq
 
 puts story_ids.join("\n")
