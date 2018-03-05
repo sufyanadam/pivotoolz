@@ -50,6 +50,7 @@ with a clean git history and all commits in your branch will be bundled
 nicely under a top-level merge commit.
 
 
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/merge-demo.gif)
 
 ### `deliver-deployed-stories`
 
