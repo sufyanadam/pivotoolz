@@ -33,6 +33,24 @@ Pivotoolz is a collection of tiny programs that can be used individually
 or composed together for more powerful features. The manner of usage of
 each is described below:
 
+### `merge`
+
+Tired of running multiple commands to merge your branch when all you
+really want to do is 'just merge' your branch? Now you can!
+Just run `merge TARGET_BRANCH` where target branch is the branch
+you want to merge into. The `merge` program takes care of rebasing the
+latest local and upstream changes from target branch into your branch,
+pushing your rebased branch, and then merging with the `--no-ff` flag.
+Life is short, the time saved adds up real fast!
+
+Example:
+When in a branch you want to merge, just run
+`merge master` to merge it into the `master` branch. You will end up
+with a clean git history and all commits in your branch will be bundled
+nicely under a top-level merge commit.
+
+
+
 ### `deliver-deployed-stories`
 
 Deliver all stories that have been deployed to the given
