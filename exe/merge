@@ -1,34 +1,29 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-set -e # Terminate on error
+target_branch = ARGV[0]&.strip
 
-TARGET_BRANCH=$1
-
-if [ -z $TARGET_BRANCH ]; then
-  echo You must provide a target branch name! Try 'development' or 'rc'
+if target_branch.nil? || target_branch.empty?
+  puts "You must provide a target branch name!"
   exit 1
-fi
+end
 
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-BRANCH_TO_MERGE=$CURRENT_BRANCH
+current_branch  = `git rev-parse --abbrev-ref HEAD`.strip
+branch_to_merge = current_branch
 
-printf "\nRunning git pull origin $TARGET_BRANCH --rebase\n\n"
-git checkout $TARGET_BRANCH
-git pull origin $TARGET_BRANCH --rebase
+puts "Running git pull origin #{current_branch} --rebase\n\n"
 
-printf "Rebasing $TARGET_BRANCH into $BRANCH_TO_MERGE\n\n"
-git checkout $BRANCH_TO_MERGE
-git rebase $TARGET_BRANCH
+`git checkout #{target_branch}`
+`git pull origin #{target_branch} --rebase`
 
-if [ "$BRANCH_TO_MERGE" == "development" ] || [ "$BRANCH_TO_MERGE" == "rc" ]; then
-  printf "No force push for $BRANCH_TO_MERGE\n\n"
-else
-  printf "Force pushing $BRANCH_TO_MERGE\n\n"
-  git push origin $BRANCH_TO_MERGE -f
-fi
+puts "\nRebasing #{target_branch} into #{branch_to_merge}\n\n"
+`git checkout #{branch_to_merge}`
+`git rebase #{target_branch}`
 
-printf "Completing the merge of $BRANCH_TO_MERGE into $TARGET_BRANCH\n\n"
-git checkout $TARGET_BRANCH
-git merge $BRANCH_TO_MERGE --no-ff --no-edit
+puts "\nForce pushing #{branch_to_merge}\n\n"
+`git push origin #{branch_to_merge} -f`
 
-printf "\n\nMerge complete, you must run git push origin $TARGET_BRANCH manually to complete the merge\n"
+puts "\nCompleting the merge of #{branch_to_merge} into #{target_branch}\n\n"
+`git checkout #{target_branch}`
+`git merge #{branch_to_merge} --no-ff --no-edit`
+
+puts "\nMerge complete, you must run git push origin #{target_branch} manually to complete the merge\n"
