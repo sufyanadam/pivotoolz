@@ -5,11 +5,20 @@ require('ostruct')
 require('rest-client')
 
 stream = ARGV.any? ? ARGV : ARGF
+if stream == ARGF && $stdin.tty?
+  puts "Usage: deliver-story STORY_INFO_JSON"
+  puts "Examples:\n deliver-story  '{\"id\":123,\"current_state\":\"started\"}'"
+  puts %Q[ echo '{"id":123,"current_state":"started"}' | deliver-story]
+  exit 1
+end
 
 stream.each do |story_hash|
   story = OpenStruct.new(JSON.parse(story_hash))
   story_state = story.current_state
-  next unless story_state == 'finished'
+  if story_state != 'finished'
+    puts "Story #{story.id} is not finished, not delivering"
+    next
+  end
 
   story_url = "https://www.pivotaltracker.com/services/v5/stories/#{story.id}"
   begin
