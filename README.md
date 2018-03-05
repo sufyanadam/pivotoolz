@@ -101,6 +101,23 @@ https://www.pivotaltracker.com/story/show/456
 Use with `post-slack-message` to post a message in a slack deployment channel
 with the list of stories that just got deployed.
 
+### `post-slack-message`
+
+Post a message to a slack channel. You will need to [setup
+a webhook integration](https://api.slack.com/incoming-webhooks) on slack first.
+Once you have done so, copy your Webhook URL into
+an environment variable `SLACK_WEBHOOK_URL`.
+If the `SLACK_WEBHOOK_URL` has been defined correctly, you will
+be able to post a message in slack to any channel as follows:
+`bundle exec post-slack-message CHANNEL "MESSAGE_TEXT"`
+Where CHANNEL is of the form "#channel" or "@user".
+
+You can also pipe a message to the `post-slack-message` program. For
+example:
+`{ echo Stories deployed to production:; bundle exec stories-deployed production; } | bundle exec post-slack-message '#production-deploys'`
+
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/post-slack-message-demo.gif)
+
 ### `deliver-deployed-stories`
 
 Deliver all stories that have been deployed to the given
@@ -133,22 +150,6 @@ Example:
 `bundle exec deliver-story '{"id": 123, "current_state": "finished"}'`
 
 If `current_state` is not `finished`, the story will not be delivered.
-
-
-### `post-slack-message`
-
-Post a message to a slack channel. You will need to [setup
-a webhook integration](https://api.slack.com/incoming-webhooks) on slack first.
-Once you have done so, copy your Webhook URL into
-an environment variable `SLACK_WEBHOOK_URL`.
-If the `SLACK_WEBHOOK_URL` has been defined correctly, you will
-be able to post a message in slack to any channel as follows:
-`bundle exec post-slack-message CHANNEL "MESSAGE_TEXT"`
-Where CHANNEL is of the form "#channel" or "@user".
-
-You can also pipe a message to the `post-slack-message` program. For
-example:
-`{ echo Stories deployed to production:; bundle exec stories-deployed production; } | bundle exec post-slack-message '#production-deploys'`
 
 ### `story-ids-deployed`
 
