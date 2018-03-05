@@ -20,6 +20,5 @@ begin
     }.to_json
   )
 rescue RestClient::Exceptions => e
-  puts "Error posting to slack #{e.message}, #{e.backtrace}"
-  exit 1
+  puts "Error posting to slack #{e.message}:\n#{e.backtrace}"
 end
