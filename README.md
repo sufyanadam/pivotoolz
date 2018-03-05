@@ -27,6 +27,23 @@ Or install it yourself as:
 
     $ gem install pivotoolz
 
+To take full advantage of the tools, ensure you have the following
+environment variables set:
+```bash
+PIVOTAL_TRACKER_API_TOKEN  # Get this from your pivotal tracker account profile page
+SLACK_WEBHOOK_URL          # Get this by creating a new Incoming Webhook integration in Slack
+```
+
+Set the environment variables by either adding them to your `.bashrc` file
+or exporting them prior to usage:
+Set the environment variables by exporting them with the following commands:
+`export PIVOTAL_TRACKER_API_TOKEN=YOUR_TOKEN`
+`export SLACK_WEBHOOK_URL=YOUR_WEBHOOK_URL`
+
+Alternatively, you can simply add those export statements to your `.bashrc` file
+so that you won't have to keep typing it every time you want to use
+`post-slack-message` or `deliver-deployed-stories` and their ilk.
+
 ## Usage
 
 Pivotoolz is a collection of tiny programs that can be used individually
