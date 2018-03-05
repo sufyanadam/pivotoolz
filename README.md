@@ -69,6 +69,15 @@ nicely under a top-level merge commit.
 
 ![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/merge-demo.gif)
 
+### `tag-it`
+
+Tag the current git HEAD with a given tag (usually environment you're about to deploy to).
+
+Example:
+`tag-it production` - Will tag the current git HEAD with `production/TIMESTAMP`
+
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/tag-it-demo.gif)
+
 ### `deliver-deployed-stories`
 
 Deliver all stories that have been deployed to the given
