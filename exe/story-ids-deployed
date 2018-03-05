@@ -7,7 +7,14 @@ if environment_tag.nil? || environment_tag.empty?
   exit 1
 end
 
-commit_message_bodies = `git log --pretty=%b $(git tag -l #{environment_tag}* | tail -n 2 | tr '\n' ' ' | sed -e 's/ /../')`.strip
+commit_range = `git tag -l #{environment_tag}* | tail -n 2 | tr '\n' ' ' | sed -e 's/ /../'`
+
+if commit_range.nil? || commit_range.empty?
+  puts "Empty commit range! Are there any commits tagged with #{environment_tag}?"
+  exit 1
+end
+
+commit_message_bodies = `git log --pretty=%b #{commit_range}`.strip
 story_ids = commit_message_bodies.
   scan(/\[Finishes\s*#(\d+)|,\s*#(\d+)\]|Fixes\s*#(\d+)|,\s*#(\d+)|#(\d+)\]/).
   flatten.
