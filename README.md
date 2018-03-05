@@ -116,6 +116,8 @@ You can also pipe a message to the `post-slack-message` program. For
 example:
 `{ echo Stories deployed to production:; bundle exec stories-deployed production; } | bundle exec post-slack-message '#production-deploys'`
 
+`post-slack-message` can be helpful if you just want to have fun trolling your co-workers too.
+
 ![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/post-slack-message-demo.gif)
 
 ### `deliver-deployed-stories`
