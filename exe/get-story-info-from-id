@@ -16,7 +16,9 @@ end
 stream = ARGV.any? ? ARGV : ARGF
 
 if stream == ARGF && $stdin.tty?
-  puts "Usage: get-story-info-from-id STORY_ID"
+  puts "Usage:\nget-story-info-from-id STORY_ID\n"
+  puts " OR\n"
+  puts "echo STORY_ID | get-story-info-from-id"
   exit 1
 end
 
