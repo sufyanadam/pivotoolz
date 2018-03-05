@@ -109,12 +109,16 @@ Once you have done so, copy your Webhook URL into
 an environment variable `SLACK_WEBHOOK_URL`.
 If the `SLACK_WEBHOOK_URL` has been defined correctly, you will
 be able to post a message in slack to any channel as follows:
-`bundle exec post-slack-message CHANNEL "MESSAGE_TEXT"`
+```bash
+bundle exec post-slack-message CHANNEL "MESSAGE_TEXT"
+```
 Where CHANNEL is of the form "#channel" or "@user".
 
 You can also pipe a message to the `post-slack-message` program. For
 example:
-`{ echo Stories deployed to production:; bundle exec stories-deployed production; } | bundle exec post-slack-message '#production-deploys'`
+```bash
+{ echo Stories deployed to production:; bundle exec stories-deployed production; } | bundle exec post-slack-message '#production-deploys'
+```
 
 `post-slack-message` can be helpful if you just want to have fun trolling your co-workers too.
 
