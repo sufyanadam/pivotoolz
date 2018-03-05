@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 
-environment_tag = ARGV[0] || 'acceptance'
+environment_tag = ARGV[0]&.strip
+
+if environment_tag.nil? || environment_tag.empty?
+  puts "Usage: story-ids-deployed ENVIRONMENT"
+  exit 1
+end
 
 commit_message_bodies = `git log --pretty=%b $(git tag -l #{environment_tag}* | tail -n 2 | tr '\n' ' ' | sed -e 's/ /../')`.strip
 story_ids = commit_message_bodies.
