@@ -3,7 +3,12 @@
 require 'json'
 require 'ostruct'
 
-environment_tag = ARGV[0] || 'acceptance'
+environment_tag = ARGV[0]&.strip
+
+if environment_tag.nil? || environment_tag.empty?
+  puts "Usage: stories-deployed ENVIRONMENT"
+  exit 1
+end
 
 deployed_story_infos = `bin/story-ids-deployed #{environment_tag} | bin/get-story-info-from-id`
 
