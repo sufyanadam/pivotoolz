@@ -4,6 +4,8 @@ require 'open-uri'
 require 'json'
 
 def get_story_info(story_id)
+  return nil if story_id.empty?
+
   begin
     open("https://www.pivotaltracker.com/services/v5/stories/#{story_id}", 'X-TrackerToken' => ENV['PIVOTAL_TRACKER_API_TOKEN']).read
   rescue StandardError => e
@@ -13,8 +15,13 @@ end
 
 stream = ARGV.any? ? ARGV : ARGF
 
+if stream == ARGF && $stdin.tty?
+  puts "Usage: get-story-info-from-id STORY_ID"
+  exit 1
+end
+
 infos = stream.reduce([]) do |reduced, story_id|
-  next reduced unless story_id =~ /\d+/
+  next reduced unless story_id && story_id =~ /\d+/
   reduced << get_story_info(story_id.strip)
 end
 
