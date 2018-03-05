@@ -10,7 +10,7 @@ if environment_tag.nil? || environment_tag.empty?
   exit 1
 end
 
-deployed_story_infos = `bin/story-ids-deployed #{environment_tag} | bin/get-story-info-from-id`
+deployed_story_infos = `story-ids-deployed #{environment_tag} | get-story-info-from-id`
 
 stories_deployed = deployed_story_infos.split("\n").compact.reduce([]) do |reduced, story_info|
   story = OpenStruct.new(JSON.parse(story_info))

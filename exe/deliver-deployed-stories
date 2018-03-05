@@ -7,4 +7,4 @@ if environment_tag.nil? || environment_tag.empty?
   exit 1
 end
 
-puts `bin/story-ids-deployed #{environment_tag} | bin/get-story-info-from-id | bin/deliver-story`
+puts `story-ids-deployed #{environment_tag} | get-story-info-from-id | deliver-story`
