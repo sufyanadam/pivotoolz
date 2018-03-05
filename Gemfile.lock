@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pivotoolz (0.1.1)
+    pivotoolz (0.1.2)
       rest-client (~> 2.0.2)
 
 GEM

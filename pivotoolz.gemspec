@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["sufyan@sealmail.net"]
 
   spec.summary       = %q{Tools to save you time when working with Pivotal Tracker stories}
-  spec.description   = %q{Auto-deliver your finished stories upon successful deployment, find out which stories went out in the last deployment}
+  spec.description   = %q{Auto-deliver your finished stories upon successful deployment, find out which stories went out in the last deployment, get a list of pivotal tracker story ids that went out in the last deployment.}
   spec.homepage      = "https://github.com/sufyanadam/pivotoolz"
   spec.license       = "MIT"
 
