@@ -66,7 +66,7 @@ When in a branch you want to merge, just run
 with a clean git history and all commits in your branch will be bundled
 nicely under a top-level merge commit.
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/merge-demo.gif)
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/merge-demo.gif)
 
 ### `tag-it`
 
@@ -75,7 +75,7 @@ Tag the current git HEAD with a given tag (usually environment you're about to d
 Example:
 `tag-it production` - Will tag the current git HEAD with `production/TIMESTAMP`
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/tag-it-demo.gif)
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/tag-it-demo.gif)
 
 ### `stories-deployed`
 
@@ -96,7 +96,7 @@ https://www.pivotaltracker.com/story/show/456
 
 ```
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/stories-deployed-demo.gif)
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/stories-deployed-demo.gif)
 
 Use with `post-slack-message` to post a message in a slack deployment channel
 with the list of stories that just got deployed.
@@ -122,7 +122,7 @@ example:
 
 `post-slack-message` can be helpful if you just want to have fun trolling your co-workers too.
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/post-slack-message-demo.gif)
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/post-slack-message-demo.gif)
 
 ### `deliver-deployed-stories`
 
