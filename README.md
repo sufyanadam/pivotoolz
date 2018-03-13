@@ -50,6 +50,61 @@ Pivotoolz is a collection of tiny programs that can be used individually
 or composed together for more powerful features. The manner of usage of
 each is described below:
 
+### `deliver-deployed-stories`
+
+Deliver all stories that have been deployed to the given
+environment since the previous and last deployment.
+
+Example:
+`deliver-deployed-stories ENVIRONMENT`
+
+Where `ENVIRONMENT` is the environment you consider to be where stories
+can be accepted/rejected.
+
+Example:
+Let's say we have an `acceptance` environment where we deploy our app to
+test out stories. As long as we label our deployed git SHAs with tags
+(using `tag-it`), we can automatically deliver any finished stories
+that went out in the last deployment by simply running the command:
+
+`deliver-deployed-stories acceptance`
+
+Add the command to your deployment process to have your stories automatically delivered
+on a successful deployment.
+
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/deliver-deployed-stories-demo.gif)
+
+### `deliver-story`
+
+Deliver a given story provided in JSON format. The minimum JSON attributes
+required are `id` and `current_state`
+
+Typically used with output from `get-story-info-from-id` piped in.
+
+Example:
+`bundle exec get-story-info-from-id STORY_ID | bundle exec deliver-story`
+  OR
+`bundle exec deliver-story '{"id": 123, "current_state": "finished"}'`
+
+If `current_state` is not `finished`, the story will not be delivered.
+
+### `story-ids-deployed`
+
+Returns a newline delimited list of all story ids deployed
+to the given environment.
+
+Example:
+```
+bundle exec story-ids-deployed production
+
+# Output:
+123
+456
+
+```
+
+
+
 ### `merge`
 
 Tired of running multiple commands to merge your branch when all you
@@ -123,55 +178,6 @@ example:
 `post-slack-message` can be helpful if you just want to have fun trolling your co-workers too.
 
 ![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/post-slack-message-demo.gif)
-
-### `deliver-deployed-stories`
-
-Deliver all stories that have been deployed to the given
-environment since the previous and last deployment.
-
-Example:
-`bundle exec deliver-deployed-stories ENVIRONMENT`
-
-Where `ENVIRONMENT` is the environment you consider to be where stories
-can be accepted/rejected.
-
-Example:
-Let's say we have an `acceptance` environment where we deploy our app to
-test out stories. As long as we label our deployed git SHAs with tags
-(using `tag-it`), we can automatically deliver any finished stories
-that went out in the last deployment by simply running the command:
-
-`bundle exec deliver-deployed-stories acceptance`
-
-### `deliver-story`
-
-Deliver a given story provided in JSON format. The minimum JSON attributes
-required are `id` and `current_state`
-
-Typically used with output from `get-story-info-from-id` piped in.
-
-Example:
-`bundle exec get-story-info-from-id STORY_ID | bundle exec deliver-story`
-  OR
-`bundle exec deliver-story '{"id": 123, "current_state": "finished"}'`
-
-If `current_state` is not `finished`, the story will not be delivered.
-
-### `story-ids-deployed`
-
-Returns a newline delimited list of all story ids deployed
-to the given environment.
-
-Example:
-```
-bundle exec story-ids-deployed production
-
-# Output:
-123
-456
-
-```
-
 
 ## Development
 
