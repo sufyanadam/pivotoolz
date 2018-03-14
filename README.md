@@ -82,9 +82,9 @@ required are `id` and `current_state`
 Typically used with output from `get-story-info-from-id` piped in.
 
 Example:
-`bundle exec get-story-info-from-id STORY_ID | bundle exec deliver-story`
+`get-story-info-from-id STORY_ID | deliver-story`
   OR
-`bundle exec deliver-story '{"id": 123, "current_state": "finished"}'`
+`deliver-story '{"id": 123, "current_state": "finished"}'`
 
 If `current_state` is not `finished`, the story will not be delivered.
 
@@ -95,7 +95,7 @@ to the given environment.
 
 Example:
 ```
-bundle exec story-ids-deployed production
+story-ids-deployed production
 
 # Output:
 123
@@ -165,14 +165,14 @@ an environment variable `SLACK_WEBHOOK_URL`.
 If the `SLACK_WEBHOOK_URL` has been defined correctly, you will
 be able to post a message in slack to any channel as follows:
 ```bash
-bundle exec post-slack-message CHANNEL "MESSAGE_TEXT"
+post-slack-message CHANNEL "MESSAGE_TEXT"
 ```
 Where CHANNEL is of the form "#channel" or "@user".
 
 You can also pipe a message to the `post-slack-message` program. For
 example:
 ```bash
-{ echo Stories deployed to production:; bundle exec stories-deployed production; } | bundle exec post-slack-message '#production-deploys'
+{ echo Stories deployed to production:; stories-deployed production; } | post-slack-message '#production-deploys'
 ```
 
 `post-slack-message` can be helpful if you just want to have fun trolling your co-workers too.
