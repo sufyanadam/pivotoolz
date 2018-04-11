@@ -72,7 +72,7 @@ that went out in the last deployment by simply running the command:
 Add the command to your deployment process to have your stories automatically delivered
 on a successful deployment.
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/deliver-deployed-stories-demo.gif)
+![usage](assets/deliver-deployed-stories-demo.gif)
 
 ### `deliver-story`
 
@@ -121,7 +121,7 @@ When in a branch you want to merge, just run
 with a clean git history and all commits in your branch will be bundled
 nicely under a top-level merge commit.
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/merge-demo.gif)
+![usage](assets/merge-demo.gif)
 
 ### `tag-it`
 
@@ -130,7 +130,7 @@ Tag the current git HEAD with a given tag (usually environment you're about to d
 Example:
 `tag-it production` - Will tag the current git HEAD with `production/TIMESTAMP`
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/tag-it-demo.gif)
+![usage](assets/tag-it-demo.gif)
 
 ### `stories-deployed`
 
@@ -151,7 +151,7 @@ https://www.pivotaltracker.com/story/show/456
 
 ```
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/stories-deployed-demo.gif)
+![usage](assets/stories-deployed-demo.gif)
 
 Use with `post-slack-message` to post a message in a slack deployment channel
 with the list of stories that just got deployed.
@@ -177,7 +177,7 @@ example:
 
 `post-slack-message` can be helpful if you just want to have fun trolling your co-workers too.
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/post-slack-message-demo.gif)
+![usage](assets/post-slack-message-demo.gif)
 
 ### `pv-git-branch`
 
@@ -200,7 +200,7 @@ So it can be used with git like this:
 git checkout -b $(pv-git-branch 111222333)
 ```
 
-![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/pv-git-branch-demo.gif)
+![usage](assets/pv-git-branch-demo.gif)
 
 ## Development
 
