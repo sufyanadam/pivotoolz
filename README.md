@@ -179,6 +179,29 @@ example:
 
 ![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/post-slack-message-demo.gif)
 
+### `pv-git-branch`
+
+Wouldn't it be nice to have all your Git branch names consistent with your dev team? Well now
+you can with `pv-git-branch`. Just pass `pv-git-branch` a Pivotal Story ID, and it will return
+branch name for you based on author name, the pivital story category, the pivotal story
+name and the pivotal story id. Be sure to set your `PIVOTAL_TRACKER_API_TOKEN` env variable is
+exported in your `.bashrc` file. If you want to explicitly set your initials as the author name,
+set your git config user initials like this: `git config --add user.initials af`. Otherwise it
+will take your `git config user.name` or `whoami` information.
+
+Example:
+```bash
+pv-git-branch 111222333
+```
+This would return something like: `af/features/building-someting-greate-111222333`
+
+So it can be used with git like this:
+```bashr
+git checkout -b $(pv-git-branch 111222333)
+```
+
+![usage](https://raw.githubusercontent.com/sufyanadam/pivotoolz/master/assets/pv-git-branch-demo.gif)
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
