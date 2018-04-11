@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/pivotoolz/git_branch'
+
+if ARGV.length != 1
+  puts "#{GitBranch.usage_message}"
+  exit
+end
+puts GitBranch.new.generate(ARGV.first)
