@@ -63,6 +63,6 @@ class GitBranch
   end
 
   def self.usage_message
-    "Usage : bin/git-branch-it [pivotal_story_id]"
+    "Usage : pv-git-branch '[pivotal_story_id]'"
   end
 end
