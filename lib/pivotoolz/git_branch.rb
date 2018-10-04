@@ -14,10 +14,14 @@ class GitBranch
     description = set_description(story['name'])
     pivotal_id  = story['id']
 
-    "#{author}/#{category}/#{description}-#{pivotal_id}"
+    create_branch("#{author}/#{category}/#{description}-#{pivotal_id}")
   end
 
   private
+
+  def create_branch(branch_name)
+    `git checkout -b #{branch_name}`
+  end
 
   def get_pivotal_story(pivotal_id)
     unless ENV['PIVOTAL_TRACKER_API_TOKEN']
