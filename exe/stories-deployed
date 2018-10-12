@@ -4,19 +4,36 @@ require 'json'
 require 'ostruct'
 
 environment_tag = ARGV[0]&.strip
-
 if environment_tag.nil? || environment_tag.empty?
   puts "Usage: stories-deployed ENVIRONMENT"
   exit 1
 end
 
-deployed_story_infos = `story-ids-deployed #{environment_tag} | get-story-info-from-id`
+flags = ARGV.select { |a| a.include?('--') || a.include?('-') }
+deployed_story_infos = `story-ids-deployed #{environment_tag} | get-story-info-from-id #{flags.join(' ')}`
 
 stories_deployed = deployed_story_infos.split("\n").compact.reduce([]) do |reduced, story_info|
   story = OpenStruct.new(JSON.parse(story_info))
 
+  include_owner_names = flags.any? { |f| f == '--owners' || f == '-O' }
+
   reduced << "#{story.error}"
-  reduced << "#{story.name}:\n#{story.url}"
+  reduced << "#{story.name&.strip}:\n#{story.url}"
+
+  if include_owner_names
+    owners = story
+      .owners
+      .compact
+      .map { |o| OpenStruct.new(o).name }
+
+    names_joined = owners.size > 2 ?
+      "#{owners[0..-2].join(',')} and #{owners.last}" :
+      owners.join(' and ')
+
+    reduced << "\nBrought to you by: #{names_joined}"
+  end
+
+  reduced
 end
 
 puts stories_deployed
