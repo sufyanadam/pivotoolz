@@ -27,7 +27,7 @@ stories_deployed = deployed_story_infos.split("\n").compact.reduce([]) do |reduc
       .map { |o| OpenStruct.new(o).name }
 
     names_joined = owners.size > 2 ?
-      "#{owners[0..-2].join(',')} and #{owners.last}" :
+      "#{owners[0..-2].join(', ')} and #{owners.last}" :
       owners.join(' and ')
 
     reduced << "\nBrought to you by: #{names_joined}"
