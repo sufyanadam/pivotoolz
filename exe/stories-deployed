@@ -10,30 +10,84 @@ if environment_tag.nil? || environment_tag.empty?
 end
 
 flags = ARGV.select { |a| a.include?('--') || a.include?('-') }
+
+include_owners = flags
+  .any? { |f| f == '--owners' || f == '-O' }
+
+format_as_json = flags
+  .any? { |f| f == '--json' || f == '-j' }
+
 deployed_story_infos = `story-ids-deployed #{environment_tag} | get-story-info-from-id #{flags.join(' ')}`
 
-stories_deployed = deployed_story_infos.split("\n").compact.reduce([]) do |reduced, story_info|
-  story = OpenStruct.new(JSON.parse(story_info))
-
-  include_owner_names = flags.any? { |f| f == '--owners' || f == '-O' }
-
-  reduced << "#{story.error}"
-  reduced << "#{story.name&.strip}:\n#{story.url}"
-
-  if include_owner_names
-    owners = story
-      .owners
-      .compact
-      .map { |o| OpenStruct.new(o).name }
-
-    names_joined = owners.size > 2 ?
-      "#{owners[0..-2].join(', ')} and #{owners.last}" :
-      owners.join(' and ')
-
-    reduced << "\nBrought to you by: #{names_joined}"
+def as_json(story, include_owners, flags)
+  if story.error
+    return {
+      title: story.error,
+      title_link: story.story_link
+    }.to_json
   end
 
-  reduced
+  json = {
+    title: story.name&.strip,
+    title_link: story.url,
+    mrkdwn_in: ["text", "pretext", "footer"]
+  }
+
+  if include_owners
+    if flags.include? '--owners-footer'
+      json.merge!(
+        footer: "\n\nBrought to you by: #{story_owner_names(story, flags)}"
+      )
+    else
+      json.merge!(
+        text: "\n\nBrought to you by: #{story_owner_names(story, flags)}"
+      )
+    end
+  end
+
+  json.to_json
 end
+
+def story_owner_names(story, flags)
+  owners = story
+    .owners
+    .compact
+    .map { |o| OpenStruct.new(o).name }
+
+  if flags.include? '--bold-owners'
+    return to_sentence(owners.map { |o| "*#{o}*" })
+  end
+
+  to_sentence(owners)
+end
+
+def to_sentence(array)
+  array.size > 2 ?
+    "#{array[0..-2].join(', ')} and #{array.last}" :
+    array.join(' and ')
+end
+
+stories_deployed = deployed_story_infos
+  .split("\n")
+  .compact
+  .reduce([]) do |reduced, story_info|
+    story = OpenStruct.new(JSON.parse(story_info))
+
+    if format_as_json
+      reduced << as_json(story, include_owners, flags)
+      next reduced
+    end
+
+    reduced << "#{story.error}"
+    next reduced if story.error
+
+    reduced << "#{story.name&.strip}:\n#{story.url}"
+
+    if include_owners
+      reduced << "\nBrought to you by: #{story_owner_names(story, flags)}"
+    end
+
+    reduced
+  end
 
 puts stories_deployed
