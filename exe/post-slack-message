@@ -10,6 +10,27 @@ content = ARGV.empty? ? ARGF.read : StringIO.new(ARGV.join("\n")).read
 exit 0 if content.empty?
 
 begin
+  if attachments = JSON.parse(content)
+    begin
+      RestClient.post(
+        URL,
+        payload: {
+          username: ENV['SLACKBOT_USERNAME'] || 'slackbot',
+          channel: channel,
+          attachments: attachments,
+          icon_emoji: ":ghost:"
+        }.to_json
+      )
+    rescue RestClient::Exceptions => e
+      puts "Error posting to slack #{e.message}:\n#{e.backtrace}"
+    end
+
+    exit 0
+  end
+rescue JSON::ParserError => e
+end
+
+begin
   RestClient.post(
     URL,
     payload: {
