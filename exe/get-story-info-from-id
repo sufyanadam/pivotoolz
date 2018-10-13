@@ -16,7 +16,12 @@ def get_story_info(story_id, flags = [])
       'X-TrackerToken' => ENV['PIVOTAL_TRACKER_API_TOKEN']
     ).read
   rescue StandardError => e
-    JSON.generate({error: "could not get story info for story #{story_id}: #{e.message}\nstory info may be available at https://www.pivotaltracker.com/story/show/#{story_id}"})
+    story_link = "https://www.pivotaltracker.com/story/show/#{story_id}"
+
+    JSON.generate({
+      error: "Could not get story info for story #{story_id}: #{e.message}\n\nStory info may be available at #{story_link}",
+      story_link: story_link
+    })
   end
 end
 
