@@ -21,6 +21,10 @@ class GitBranch
 
   def create_branch(branch_name)
     `git checkout -b #{branch_name}`
+    if $?.exitstatus == 128
+      puts 'Checking out existing branch...'
+      `git checkout #{branch_name}`
+    end
   end
 
   def get_pivotal_story(pivotal_id)
