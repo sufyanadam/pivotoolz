@@ -193,7 +193,9 @@ Example:
 ```bash
 pv-git-branch "#111222333"
 ```
-This would create and checkout a new branch: `af/features/building-someting-great-111222333`
+This would create and checkout a new branch: `af/features/building-someting-great-111222333`.
+
+If the branch had already been created, the command will automatically check out existing branch.
 
 ![usage](assets/pv-git-branch-demo.gif)
 
