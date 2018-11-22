@@ -7,7 +7,7 @@ URL = ENV['SLACK_WEBHOOK_URL']
 
 channel = ARGV.shift
 content = ARGV.empty? ? ARGF.read : StringIO.new(ARGV.join("\n")).read
-exit 0 if content.empty?
+exit 0 if content.strip.empty?
 
 begin
   if attachments = JSON.parse(
