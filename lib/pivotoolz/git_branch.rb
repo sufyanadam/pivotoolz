@@ -1,7 +1,7 @@
 require 'json'
 
 class GitBranch
-  def generate(story_id)
+  def generate(story_id, *append)
     if !story_id
       puts "#{GitBranch.usage_message}"
       exit
@@ -13,8 +13,9 @@ class GitBranch
     category    = set_category(story['story_type'])
     description = set_description(story['name'])
     pivotal_id  = story['id']
+    append      = set_append_values(append)
 
-    create_branch("#{author}/#{category}/#{description}-#{pivotal_id}")
+    create_branch("#{author}/#{category}/#{description}-#{pivotal_id}#{append}")
   end
 
   private
@@ -38,9 +39,7 @@ class GitBranch
 
   def set_author
     author_name = get_author_initials || get_author_name || get_whoami || 'unknown'
-    author_name.downcase!
-    author_name.tr!('.@!#$%^\&*()', '')
-    author_name.tr(' ', '+')
+    clean_text(author_name)
   end
 
   def get_author_initials
@@ -63,14 +62,24 @@ class GitBranch
   end
 
   def set_description(description)
-    description.tr!(':_,/.&!@#$%^*()[]\'`<>"', '') # remove unwanted punctuation
-    description.tr!('-', ' ') # replace dashes with space
-    description.downcase! # convert to lowercase
-    description.gsub!(/ +/,'-') # collapse spacing and replace spaces with dashes
-    description[0 .. 45].gsub(/-$/, '')
+    clean_text(description)
+  end
+
+  def set_append_values(appendings)
+    return '' if appendings.empty?
+    clean_appendings = appendings.map{|appending| clean_text(appending) }
+    "-#{clean_appendings.join('-')}"
+  end
+
+  def clean_text(string_value)
+    string_value.tr!(':_,/.&!@#$%^*()[]\'`<>"', '') # remove unwanted punctuation
+    string_value.tr!('-', ' ') # replace dashes with space
+    string_value.downcase! # convert to lowercase
+    string_value.gsub!(/ +/,'-') # collapse spacing and replace spaces with dashes
+    string_value[0 .. 35].gsub(/-$/, '') # limit to 45 chars
   end
 
   def self.usage_message
-    "Usage : pv-git-branch '[pivotal_story_id]'"
+    "Usage : pv-git-branch '<pivotal_story_id>' '[<appended_branchname_values>...]'"
   end
 end
