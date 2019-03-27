@@ -2,8 +2,9 @@
 
 require_relative '../lib/pivotoolz/git_branch'
 
-if ARGV.length != 1
+if ARGV.length < 1
   puts "#{GitBranch.usage_message}"
   exit
 end
-puts GitBranch.new.generate(ARGV.first)
+first_arg, *the_rest = ARGV
+puts GitBranch.new.generate(first_arg, the_rest)

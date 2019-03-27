@@ -189,11 +189,19 @@ Be sure to set your `PIVOTAL_TRACKER_API_TOKEN` env variable in your `.bashrc` f
 set your git config user initials like this: `git config --add user.initials af`. Otherwise it
 will take your `git config user.name` or `whoami` information.
 
-Example:
+Example 1:
 ```bash
 pv-git-branch "#111222333"
 ```
-This would create and checkout a new branch: `af/features/building-someting-great-111222333`.
+This would create and checkout a new branch:
+`af/features/building-someting-great-111222333`.
+
+Example 2 (appending values):
+```bash
+pv-git-branch 12345678 version2 backend only
+```
+This would create and checkout a new branch:
+`af/features/building-something-awesome-12345678-version2-backend-only`
 
 If the branch had already been created, the command will automatically check out existing branch.
 
