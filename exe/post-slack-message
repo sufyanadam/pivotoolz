@@ -10,19 +10,14 @@ content = ARGV.empty? ? ARGF.read : StringIO.new(ARGV.join("\n")).read
 exit 0 if content.strip.empty?
 
 begin
-  if attachments = JSON.parse(
-    "[#{content.split("\n").slice(1..-1).join(",")}]"
-  )
+  text, *json = content.split("\n")
+  if !json.empty?
+    post_data = json.any? { |s| s.include? 'blocks' } ? JSON.parse(json.first) : {attachments: json.map { |j| JSON.parse(j) }}
     begin
       RestClient.post(
         URL,
-        payload: {
-          username: ENV['SLACKBOT_USERNAME'] || 'slackbot',
-          channel: channel,
-          text: content.split("\n")&.first || '',
-          attachments: attachments,
-          icon_emoji: ":ghost:"
-        }.to_json
+        post_data.merge({text: text || ''}).to_json,
+        {content_type: :json, accept: :json}
       )
     rescue RestClient::Exceptions => e
       puts "Error posting to slack #{e.message}:\n#{e.backtrace}"
