@@ -2,42 +2,32 @@
 
 require 'rest-client'
 require 'json'
+require_relative '../lib/pivotoolz/post_slack_message'
 
-URL = ENV['SLACK_WEBHOOK_URL']
+URL = ENV.fetch('SLACK_WEBHOOK_URL') { '' }
+CHANNEL_URL_MAP = ENV.fetch('SLACK_WEBHOOK_CHANNEL_URLS') { {} }
+
+if URL.empty? && CHANNEL_URL_MAP.empty?
+  puts "Need either SLACK_WEBHOOK_URL or SLACK_WEBHOOK_CHANNEL_URLS to be defined!"
+  exit 0
+end
 
 channel = ARGV.shift
+if channel.to_s.empty?
+  puts "Channel to post to is required!!"
+  exit 0
+end
+
 content = ARGV.empty? ? ARGF.read : StringIO.new(ARGV.join("\n")).read
 exit 0 if content.strip.empty?
 
-begin
-  text, *json = content.split("\n")
-  if !json.empty?
-    post_data = json.any? { |s| s.include? 'blocks' } ? JSON.parse(json.first) : {attachments: json.map { |j| JSON.parse(j) }}
-    begin
-      RestClient.post(
-        URL,
-        post_data.merge({text: text || ''}).to_json,
-        {content_type: :json, accept: :json}
-      )
-    rescue RestClient::Exceptions => e
-      puts "Error posting to slack #{e.message}:\n#{e.backtrace}"
-    end
+psm = PostSlackMessage.new
+webhook_url = psm.select_webhook_url(URL, CHANNEL_URL_MAP, channel)
 
-    exit 0
-  end
-rescue JSON::ParserError => e
+if webhook_url.nil?
+  puts "Channel '#{channel}' webhook url not found! Please define it in SLACK_WEBHOOK_CHANNEL_URLS environment variable"
+  exit 0
 end
 
-begin
-  RestClient.post(
-    URL,
-    payload: {
-      username: ENV['SLACKBOT_USERNAME'] || 'slackbot',
-      channel: channel,
-      text: content,
-      icon_emoji: ":ghost:"
-    }.to_json
-  )
-rescue RestClient::Exceptions => e
-  puts "Error posting to slack #{e.message}:\n#{e.backtrace}"
-end
+result = psm.post_message(webhook_url, channel, content)
+puts result if !result.empty?
