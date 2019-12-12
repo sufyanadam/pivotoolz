@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+require 'open-uri'
+require 'json'
+
+BASE_URL = "https://stessa.atlassian.net/rest/api/2/issue/"
+
+def get_story_info(story_id, flags = [])
+  return nil if story_id.empty?
+
+  begin
+    include_owner_names = flags.any? { |f| f == '--owners' || f == '-O' }
+    url = BASE_URL + "#{story_id}" + "/#{include_owner_names ? '?fields=:default,owners' : ''}"
+    open(
+      url,
+      'Authorization' => "Basic #{ENV['JIRA_API_BASIC_AUTH_BASE64_ENCODED']}"
+    ).read
+  rescue StandardError => e
+    story_link = "https://stessa.atlassian.net/browse/#{story_id}"
+
+    JSON.generate({
+      error: "Could not get story info for story #{story_id}: #{e.message}\n\nStory info may be available at #{story_link}",
+      story_link: story_link
+    })
+  end
+end
+
+flags = ARGV.reduce([]) do |reduced, a|
+  reduced << a if a.include?('--') || a.include?('-')
+  reduced
+end
+
+flags.each { |f| ARGV.delete f }
+
+stream = ARGV.any? ? ARGV : ARGF
+
+if stream == ARGF && $stdin.tty?
+  puts "Usage:\nget-story-info-from-jira-id STORY_ID\n"
+  puts " OR\n"
+  puts "echo STORY_ID | get-story-info-from-id"
+  puts " OR\n"
+  exit 1
+end
+
+infos = stream.reduce([]) do |reduced, story_id|
+  next reduced unless story_id && story_id =~ /\d+/
+  reduced << get_story_info(story_id.strip, flags)
+end
+
+puts infos.join("\n")

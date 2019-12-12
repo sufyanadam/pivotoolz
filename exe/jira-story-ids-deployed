@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+environment_tag = ARGV[0]&.strip
+
+if environment_tag.nil? || environment_tag.empty?
+  puts "Usage: story-ids-deployed ENVIRONMENT"
+  exit 1
+end
+
+commit_range = `git tag -l #{environment_tag}* | tail -n 2 | tr '\n' ' ' | sed -e 's/ /../'`.strip
+
+if commit_range.nil? || commit_range.empty?
+  puts "Empty commit range! Are there any commits tagged with #{environment_tag}?"
+  exit 1
+end
+
+commit_message_bodies = `git log --pretty="%h %s" #{commit_range}`.strip
+story_ids = commit_message_bodies.
+  # TODO: Make this configurable
+  scan(/(DI-\d+|ST-\d+)/).
+  flatten.
+  compact.
+  uniq
+
+puts story_ids.join("\n")
