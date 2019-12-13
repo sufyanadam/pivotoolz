@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'ostruct'
+
+environment_tag = ARGV[0]&.strip
+if environment_tag.nil? || environment_tag.empty?
+  puts "Usage: stories-deployed ENVIRONMENT"
+  exit 1
+end
+
+flags = ARGV.select { |a| a.include?('--') || a.include?('-') }
+
+include_owners = flags
+  .any? { |f| f == '--owners' || f == '-O' }
+
+format_as_json = flags
+  .any? { |f| f == '--json' || f == '-j' }
+
+deployed_story_infos = `jira-story-ids-deployed #{environment_tag} | get-story-info-from-jira-id #{flags.join(' ')}`
+
+def as_json(story, include_owners, flags)
+  if story.error
+    return {
+      title: story.error,
+      title_link: story.story_link
+    }.to_json
+  end
+
+  json = {
+    title: story.fields['summary']&.strip,
+    title_link: "https://stessa.atlassian.net/browse/#{story.key}",
+    mrkdwn_in: ["text", "pretext", "footer"]
+  }
+
+  if include_owners
+    if flags.include? '--owners-footer'
+      json.merge!(
+        footer: "\n\nBrought to you by: #{story_owner_names(story, flags)}"
+      )
+    else
+      json.merge!(
+        text: "\n\nBrought to you by: #{story_owner_names(story, flags)}"
+      )
+    end
+  end
+
+  json.to_json
+end
+
+def story_owner_names(story, flags)
+  owners = story
+    .owners
+    .compact
+    .map { |o| OpenStruct.new(o).name }
+
+  if flags.include? '--bold-owners'
+    return to_sentence(owners.map { |o| "*#{o}*" })
+  end
+
+  to_sentence(owners)
+end
+
+def to_sentence(array)
+  array.size > 2 ?
+    "#{array[0..-2].join(', ')} and #{array.last}" :
+    array.join(' and ')
+end
+
+stories_deployed = deployed_story_infos
+  .split("\n")
+  .compact
+  .reduce([]) do |reduced, story_info|
+    story = OpenStruct.new(JSON.parse(story_info))
+
+    if format_as_json
+      reduced << as_json(story, include_owners, flags)
+      next reduced
+    end
+
+    reduced << "#{story.error}"
+    next reduced if story.error
+
+    reduced << "#{story.name&.strip}:\n#{story.url}"
+
+    if include_owners
+      reduced << "\nBrought to you by: #{story_owner_names(story, flags)}"
+    end
+
+    reduced
+  end
+
+puts stories_deployed
