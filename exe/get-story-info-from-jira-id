@@ -3,9 +3,9 @@
 require 'open-uri'
 require 'json'
 
-BASE_URL = "https://stessa.atlassian.net/rest/api/2/issue/"
+BASE_URL = ENV['JIRA_API_BASE_URL']
 
-def get_story_info(story_id, flags = [])
+def get_story_info(story_id, flags = [], subdomain)
   return nil if story_id.empty?
 
   begin
@@ -16,13 +16,25 @@ def get_story_info(story_id, flags = [])
       'Authorization' => "Basic #{ENV['JIRA_API_BASIC_AUTH_BASE64_ENCODED']}"
     ).read
   rescue StandardError => e
-    story_link = "https://stessa.atlassian.net/browse/#{story_id}"
+    story_link = "https://#{subdomain}.atlassian.net/browse/#{story_id}"
 
     JSON.generate({
       error: "Could not get story info for story #{story_id}: #{e.message}\n\nStory info may be available at #{story_link}",
       story_link: story_link
     })
   end
+end
+
+if BASE_URL.nil? || BASE_URL.empty?
+  puts "Please set JIRA_API_BASE_URL. It looks something like 'https://YOUR-COMPANY.atlassian.net/rest/api/2/issue/'"
+  exit 1
+end
+
+begin
+  subdomain = URI.parse(BASE_URL).host.split('.atlassian.net').first
+rescue => e
+  puts "Error determining your Jira subdomain. Please check your JIRA_API_BASE_URL environment variable"
+  exit 1
 end
 
 flags = ARGV.reduce([]) do |reduced, a|
@@ -44,7 +56,7 @@ end
 
 infos = stream.reduce([]) do |reduced, story_id|
   next reduced unless story_id && story_id =~ /\d+/
-  reduced << get_story_info(story_id.strip, flags)
+  reduced << get_story_info(story_id.strip, flags, subdomain)
 end
 
 puts infos.join("\n")

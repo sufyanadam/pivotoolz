@@ -3,6 +3,20 @@
 require 'json'
 require 'ostruct'
 
+BASE_URL = ENV['JIRA_API_BASE_URL']
+
+if BASE_URL.nil? || BASE_URL.empty?
+  puts "Please set JIRA_API_BASE_URL. It looks something like 'https://YOUR-COMPANY.atlassian.net/rest/api/2/issue/'"
+  exit 1
+end
+
+begin
+  subdomain = URI.parse(BASE_URL).host.split('.atlassian.net').first
+rescue => e
+  puts "Error determining your Jira subdomain. Please check your JIRA_API_BASE_URL environment variable"
+  exit 1
+end
+
 environment_tag = ARGV[0]&.strip
 if environment_tag.nil? || environment_tag.empty?
   puts "Usage: stories-deployed ENVIRONMENT"
@@ -19,7 +33,7 @@ format_as_json = flags
 
 deployed_story_infos = `jira-story-ids-deployed #{environment_tag} | get-story-info-from-jira-id #{flags.join(' ')}`
 
-def as_json(story, include_owners, flags)
+def as_json(story, include_owners, flags, subdomain)
   if story.error
     return {
       title: story.error,
@@ -29,7 +43,7 @@ def as_json(story, include_owners, flags)
 
   json = {
     title: story.fields['summary']&.strip,
-    title_link: "https://stessa.atlassian.net/browse/#{story.key}",
+    title_link: "https://#{subdomain}.atlassian.net/browse/#{story.key}",
     mrkdwn_in: ["text", "pretext", "footer"]
   }
 
@@ -74,7 +88,7 @@ stories_deployed = deployed_story_infos
     story = OpenStruct.new(JSON.parse(story_info))
 
     if format_as_json
-      reduced << as_json(story, include_owners, flags)
+      reduced << as_json(story, include_owners, flags, subdomain)
       next reduced
     end
 
