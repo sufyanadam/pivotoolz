@@ -9,9 +9,8 @@ def get_story_info(story_id, flags = [], subdomain)
   return nil if story_id.empty?
 
   begin
-    include_owner_names = flags.any? { |f| f == '--owners' || f == '-O' }
-    url = BASE_URL + "#{story_id}" + "/#{include_owner_names ? '?fields=:default,owners' : ''}"
-    open(
+    url = BASE_URL + "#{story_id}"
+    URI.open(
       url,
       'Authorization' => "Basic #{ENV['JIRA_API_BASIC_AUTH_BASE64_ENCODED']}"
     ).read

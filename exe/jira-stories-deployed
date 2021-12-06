@@ -2,6 +2,7 @@
 
 require 'json'
 require 'ostruct'
+require 'uri'
 
 BASE_URL = ENV['JIRA_API_BASE_URL']
 
@@ -63,10 +64,12 @@ def as_json(story, include_owners, flags, subdomain)
 end
 
 def story_owner_names(story, flags)
-  owners = story
-    .owners
-    .compact
-    .map { |o| OpenStruct.new(o).name }
+  owners = *(
+    story
+    .fields
+    .assignee
+    &.displayName
+  )
 
   if flags.include? '--bold-owners'
     return to_sentence(owners.map { |o| "*#{o}*" })
@@ -85,7 +88,7 @@ stories_deployed = deployed_story_infos
   .split("\n")
   .compact
   .reduce([]) do |reduced, story_info|
-    story = OpenStruct.new(JSON.parse(story_info))
+    story = JSON.parse(story_info, object_class: OpenStruct)
 
     if format_as_json
       reduced << as_json(story, include_owners, flags, subdomain)

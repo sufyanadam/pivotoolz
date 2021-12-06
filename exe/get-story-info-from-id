@@ -11,7 +11,7 @@ def get_story_info(story_id, flags = [])
   begin
     include_owner_names = flags.any? { |f| f == '--owners' || f == '-O' }
     url = BASE_URL + "#{story_id}" + "/#{include_owner_names ? '?fields=:default,owners' : ''}"
-    open(
+    URI.open(
       url,
       'X-TrackerToken' => ENV['PIVOTAL_TRACKER_API_TOKEN']
     ).read

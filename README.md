@@ -156,6 +156,15 @@ https://www.pivotaltracker.com/story/show/456
 Use with `post-slack-message` to post a message in a slack deployment channel
 with the list of stories that just got deployed.
 
+For a slack-compatible formatted message, add the `--json` flag.
+
+There are additional formatting flags if you want to see the name of the person who completed a story in the slack formatted message:
+`--owners` - Show name of person who completed the story as part of the message
+
+`--owners-footer` - Show name of person who completed the story as a footer (requires `--owners` flag)
+
+`--bold-owners` - Show name of person who completed the story in bold text (requires `--owners` flag)
+
 ### `post-slack-message`
 
 Post a message to a slack channel. You will need to [setup
