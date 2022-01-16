@@ -165,6 +165,20 @@ There are additional formatting flags if you want to see the name of the person 
 
 `--bold-owners` - Show name of person who completed the story in bold text (requires `--owners` flag)
 
+### `jira-stories-deployed`
+
+Similar to `stories-deployed`, but for Jira! Now you can use your favourite development workflow accelerator, even if your
+current team uses Jira!
+
+Simply define the following environment variables, and you're ready to go!
+
+```
+export JIRA_API_BASIC_AUTH_BASE64_ENCODED=BASE_64_ENCODED_username:password   # See https://developer.atlassian.com/server/jira/platform/basic-authentication/
+export JIRA_API_BASE_URL=https://YOUR_ORG.atlassian.net/rest/api/3/issue/
+export STORY_ID_REGEX=YOUR_STORY_ID_PATTERN_REGEX  # Falls back to [[:alpha:]]+-\d+ if not set
+```
+Use `jira-stories-deployed` just as you would `stories-deployed`.
+
 ### `post-slack-message`
 
 Post a message to a slack channel. You will need to [setup
