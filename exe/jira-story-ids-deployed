@@ -17,7 +17,7 @@ end
 commit_message_bodies = `git log --pretty="%h %s" #{commit_range}`.strip
 story_ids = commit_message_bodies.
   # TODO: Make this configurable
-  scan(/#{ENV['STORY_ID_REGEX'] || '[[:alpha:]]+-\d+'}/).
+  scan(/#{ENV['STORY_ID_REGEX'] || '[[:alpha:]]+-\d+|[[\w]]+-\d+'}/).
   flatten.
   compact.
   uniq
